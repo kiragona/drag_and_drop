@@ -5,23 +5,25 @@ import styled from 'styled-components'
 
 
 const Container = styled.div`
-  border: 1px solid lightgrey;
+  border: 3px solid lightgrey;
   padding: 8px;
-  margin-bottom: 8px;
-  border-radius: 2px;
-  background-color: ${props =>
-  props.isDragDisabled
-    ? 'lightgrey'
-    : props.isDragging
-    ? 'lightgreen'
-    : 'white'
-
-};
-  
+  margin-right: 8px;
+  border-radius: 50%;
+  background-color: ${props => props.isDragging ? 'lightgreen' : 'white'};
+  width: 40px;
+  height: 40px;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  &:focus {
+    outline: none;
+    border-color: red;
+  }
+  
 `
 
-// drag handle - provides ability to drag only from this element and not whole task
+// drag handle - provides ability to drag only from this element and not whole draggable container
 const Handle = styled.div`
      width: 20px;
      height: 20px;
@@ -40,20 +42,16 @@ const Handle = styled.div`
  */
 const Task = ({task, index}) => {
 
-  const isDragDisabled = task.id === 'task-1'
   return (
-    <Draggable draggableId={task.id} index={index} isDragDisabled={isDragDisabled}>
+    <Draggable draggableId={task.id} index={index}>
       {(provided, snapshot) => (
         <Container
           {...provided.draggableProps}
+          {...provided.dragHandleProps}
           ref={provided.innerRef}
           isDragging={snapshot.isDragging}
-          isDragDisabled={isDragDisabled}
         >
-          <Handle
-            {...provided.dragHandleProps}
-          />
-          {task.content}
+          {task.content[0]}
 
         </Container>
       )}

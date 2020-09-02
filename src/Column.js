@@ -8,8 +8,6 @@ const ColumnContainer = styled.div`
   margin: 8px;
   border: 1px solid lightgrey;
   border-radius: 2px;
-  width: 220px;
-  
   display: flex;
   flex-direction: column;
   
@@ -21,8 +19,7 @@ const TaskList = styled.div`
  padding: 8px;
  background-color: ${props => (props.isDraggingOver ? 'skyblue' : 'white')};
  transition: background-color 0.2s ease;
- flex: 1 1 auto;
- min-height: 100px;
+ display : flex;
 `
 
 
@@ -34,7 +31,7 @@ const TaskList = styled.div`
 
  */
 
-const Column = ({column, tasks, isDropDisabled}) => {
+const Column = ({column, tasks}) => {
    // Control where could be dropped by folowing Droppable props:
   //  1. by type property:  type={column.id === 'column-3' ? 'done' : 'active'} - enables drop only if start droppable has the same type as end droppable
   // 2. by isDropDisabled property: doesn't matter what type is
@@ -45,7 +42,7 @@ const Column = ({column, tasks, isDropDisabled}) => {
       <ColumnTitle>{column.title}</ColumnTitle>
       <Droppable
         droppableId={column.id}
-        isDropDisabled={isDropDisabled}
+        direction='horizontal'
       >
         {(provided, snapshot) => (
           <TaskList

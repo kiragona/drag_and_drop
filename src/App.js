@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 import Column from './Column'
 import {DragDropContext} from 'react-beautiful-dnd'
 import '@atlaskit/css-reset'
@@ -8,15 +8,11 @@ import InitialData from './initial-data'
 
 const App = () => {
   const [initialData, setInitialData] = useState(InitialData)
-  const [startColumnIndex, setStartColumnIndex] = useState(-1)
-
   //see example-hooks - updating global styles while dragging
   const onDragStart = (start) => {
     document.body.color = 'orange';
     document.body.style.transition = 'background-color 0.2s ease'
-    const startColumnIndex = initialData.columnOrder.indexOf(start.source.droppableId)
-    setStartColumnIndex(startColumnIndex)
-  }
+   }
 
   const onDragUpdate = (update) => {
     const {destination} = update
@@ -64,9 +60,6 @@ const App = () => {
 
     const {destination, source, draggableId} = result
 
-    //clear startColumnIndex when the drag ends
-    setStartColumnIndex(-1)
-
     if (!destination) {
       // was dropped outside
       return
@@ -113,13 +106,10 @@ const App = () => {
           return initialData.tasks[taskId]
         })
 
-        const isDropDisabled = startColumnIndex >= index
-
         return <Column
           key={columnId}
           column={column}
           tasks={columnTasks}
-          isDropDisabled={isDropDisabled}
         />
       })
       }
