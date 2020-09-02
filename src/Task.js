@@ -10,26 +10,15 @@ const Container = styled.div`
   margin-bottom: 8px;
   border-radius: 2px;
   background-color: ${props =>
-  props.isDragDisabled
-    ? 'lightgrey'
-    : props.isDragging
+  props.draggingOver
     ? 'lightgreen'
+    : props.isDragging
+    ? 'lightgrey'
     : 'white'
 
 };
   
   display: flex;
-`
-
-// drag handle - provides ability to drag only from this element and not whole task
-const Handle = styled.div`
-     width: 20px;
-     height: 20px;
-     background-color: orange;
-     border-radius: 4px;
-     margin-right: 8px;
-     
-     
 `
 /*
   example of Draggable snapshot = {
@@ -40,19 +29,20 @@ const Handle = styled.div`
  */
 const Task = ({task, index}) => {
 
-  const isDragDisabled = task.id === 'task-1'
+  const isDragDisabled = false// task.id === 'task-1'
+
+  // draggingOver in Draggable snapshot - id , What Droppable (if any) the Draggable is currently over
   return (
     <Draggable draggableId={task.id} index={index} isDragDisabled={isDragDisabled}>
       {(provided, snapshot) => (
         <Container
           {...provided.draggableProps}
+          {...provided.dragHandleProps}
           ref={provided.innerRef}
           isDragging={snapshot.isDragging}
+          draggingOver={snapshot.draggingOver}
           isDragDisabled={isDragDisabled}
         >
-          <Handle
-            {...provided.dragHandleProps}
-          />
           {task.content}
 
         </Container>

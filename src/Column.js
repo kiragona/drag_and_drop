@@ -1,7 +1,7 @@
 import React from 'react'
 import Task from './Task'
 
-import {Droppable} from 'react-beautiful-dnd'
+import {Droppable, Draggable} from 'react-beautiful-dnd'
 import styled from 'styled-components'
 
 const ColumnContainer = styled.div`
@@ -9,7 +9,7 @@ const ColumnContainer = styled.div`
   border: 1px solid lightgrey;
   border-radius: 2px;
   width: 220px;
-  
+  background: white;
   display: flex;
   flex-direction: column;
   
@@ -19,7 +19,7 @@ const ColumnTitle = styled.h3`
 `
 const TaskList = styled.div`
  padding: 8px;
- background-color: ${props => (props.isDraggingOver ? 'skyblue' : 'white')};
+ background-color: ${props => (props.isDraggingOver ? 'skyblue' : 'inherit')};
  transition: background-color 0.2s ease;
  flex: 1 1 auto;
  min-height: 100px;
@@ -34,31 +34,39 @@ const TaskList = styled.div`
 
  */
 
-const Column = ({column, tasks, isDropDisabled}) => {
-   // Control where could be dropped by folowing Droppable props:
+const Column = ({column, tasks, isDropDisabled, index}) => {
+  // Control where could be dropped by folowing Droppable props:
   //  1. by type property:  type={column.id === 'column-3' ? 'done' : 'active'} - enables drop only if start droppable has the same type as end droppable
   // 2. by isDropDisabled property: doesn't matter what type is
 
   // in this example e enforce that tasks can only move to the right of where they started
   return (
-    <ColumnContainer>
-      <ColumnTitle>{column.title}</ColumnTitle>
-      <Droppable
-        droppableId={column.id}
-        isDropDisabled={isDropDisabled}
-      >
-        {(provided, snapshot) => (
-          <TaskList
-            {...provided.droppableProps}
+    <Draggable draggableId={column.id} index={index}>
+      {
+        (provided) => (
+          <ColumnContainer
+            {...provided.draggableProps}
             ref={provided.innerRef}
-            isDraggingOver={snapshot.isDraggingOver}
           >
-            {tasks.map((task, index) => <Task key={task.id} task={task} index={index}/>)}
-            {provided.placeholder}
-          </TaskList>
-        )}
-      </Droppable>
-    </ColumnContainer>
+            <ColumnTitle {...provided.dragHandleProps}>{column.title}</ColumnTitle>
+            <Droppable droppableId={column.id} isDropDisabled={isDropDisabled} type='task'>
+              {(provided, snapshot) => (
+                <TaskList
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  isDraggingOver={snapshot.isDraggingOver}
+                >
+                  {tasks.map((task, index) => <Task key={task.id} task={task} index={index}/>)}
+                  {provided.placeholder}
+                </TaskList>
+              )}
+            </Droppable>
+          </ColumnContainer>
+        )
+      }
+
+
+    </Draggable>
   )
 }
 
