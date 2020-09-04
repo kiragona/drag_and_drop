@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import Column from './Column'
 import {DragDropContext, Droppable} from 'react-beautiful-dnd'
 
@@ -12,6 +12,26 @@ import InitialData from './initial-data'
 const Container = styled.div`
   display: flex;
 `
+
+const ColumnRender = React.memo(({key, column, tasksMap, index}) => {
+  const columnTasks = column.taskIds.map((taskId) => {
+    return tasksMap[taskId]
+  })
+
+  const isDropDisabled = false// startColumnIndex >= index
+
+  return (
+    <Column
+      key={key}
+      column={column}
+      tasks={columnTasks}
+      isDropDisabled={isDropDisabled}
+      index={index}
+    />
+  )
+
+})
+
 
 const App = () => {
   const [initialData, setInitialData] = useState(InitialData)
@@ -142,7 +162,13 @@ const App = () => {
           >
             {initialData.columnOrder.map((columnId, index) => {
               const column = initialData.columns[columnId]
-              const columnTasks = column.taskIds.map((taskId) => {
+              return <ColumnRender key={columnId}
+                                   column={column}
+                                   tasksMap={initialData.tasks}
+                                   index={index}
+
+              />
+             /* const columnTasks = column.taskIds.map((taskId) => {
                 return initialData.tasks[taskId]
               })
 
@@ -154,7 +180,7 @@ const App = () => {
                 tasks={columnTasks}
                 isDropDisabled={isDropDisabled}
                 index={index}
-              />
+              />*/
             })}
             {provided.placeholder}
           </Container>
