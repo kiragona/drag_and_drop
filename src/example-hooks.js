@@ -27,7 +27,7 @@ const result = {
 
 const resultExample = {
   draggableId: 'task-1',
-  type: 'TYPE',
+  type: 'TYPE', //type of droppable
   source: {
     droppableId: 'column-1',
     index: 0
